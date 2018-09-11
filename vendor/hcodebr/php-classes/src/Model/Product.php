@@ -114,7 +114,7 @@ class Product extends Model{
 
 		imagedestroy($image);
 
-		$this->setPhoto();
+		$this->checkPhoto();
 	}
 }
 
