@@ -36,6 +36,7 @@ class Category extends Model{
 		$results = $sql->select("select * from tb_categories where idcategory = :idcategory", [':idcategory'=>$idcategory]);
 
 		$this->setData($results[0]);
+		
 	}
 
 	public function delete(){
@@ -92,6 +93,32 @@ class Category extends Model{
 			]);				
 
 		}
+	}
+
+	public function getProductsPage($page = 1, $itemsPerPage = 2){
+
+		$start = ($page - 1) * $itemsPerPage;
+
+		$sql = new Sql();
+
+		$results = $sql->select("
+				select sql_calc_found_rows *
+				from tb_products p
+				inner join tb_productscategories pc on p.idproduct = pc.idproduct
+				inner join tb_categories c on c.idcategory = pc.idcategory
+				where c.idcategory = :idcategory
+				limit $start, $itemsPerPage;
+			", [
+				':idcategory'=>$this->getidcategory()
+			]);
+
+		$resultTotal = $sql->select("select found_rows() as nrtotal;");
+
+		return [
+			'data'=>Product::checklist($results),
+			'total'=>(int)$resultTotal[0]["nrtotal"],
+			'pages'=>ceil($resultTotal[0]["nrtotal"]/$itemsPerPage)
+		];
 	}
 
 	public function addProduct(Product $product){

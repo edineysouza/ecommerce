@@ -128,6 +128,29 @@ class Product extends Model{
 
 		$this->checkPhoto();
 	}
+
+	public function getFromURL($desurl){
+
+		$sql = new Sql();
+
+		$rows = $sql->select("select * from tb_products where desurl = :desurl limit 1", [
+			':desurl'=>$desurl
+		]);
+
+		$this->setData($rows[0]);
+	}
+
+	public function getCategories(){
+
+		$sql = new Sql();
+
+		return $sql->select("
+			select * from tb_categories c 
+			inner join tb_productscategories pc on c.idcategory = pc.idcategory where pc.idproduct = :idproduct",
+			[
+			':idproduct'=>$this->getidproduct()
+		]);
+	}
 }
 
 ?>
