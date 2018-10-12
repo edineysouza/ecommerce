@@ -26,13 +26,13 @@ $app->get("/admin/users", function(){
 
 		array_push($pages, [
 			'href'=>'/admin/users?'.http_build_query([
-				'page'=>$x+1,
+				'page'=>$x + 1,
 				'search'=>$search
 			]),
-			'text'=>$x+1
+			'text'=>$x + 1
 		]);
 	}
-
+	
 	$page = new PageAdmin();
 
 	$page->setTpl("users",  array(
